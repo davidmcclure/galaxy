@@ -10,23 +10,7 @@ import { Subject } from 'rxjs';
 // TODO: Just import what we're using, to save size.
 import * as d3 from 'd3';
 
-
-function rgbToHex(r: number, g: number, b: number): number {
-  return (r << 16) | (g << 8) | b;
-}
-
-
-function hexToRgb(hex: number): [number, number, number] {
-  const r = (hex >> 16) & 255;
-  const g = (hex >> 8) & 255;
-  const b = hex & 255;
-  return [r / 255, g / 255, b / 255];
-}
-
-
-export function scaleVec2(vec: [number, number], k: number): [number, number] {
-  return [vec[0] * k, vec[1] * k];
-}
+import * as utils from './utils';
 
 
 export class Bounds {
@@ -459,7 +443,7 @@ export class Plot<T> {
 
     // Generate id -> RGB colors for picking.
     const pickingColorData = range(totalSlots)
-      .map(i => hexToRgb(i + 1));
+      .map(i => utils.hexToRgb(i + 1));
 
     const pickingColor = this.regl.buffer(pickingColorData);
 
@@ -659,7 +643,7 @@ export class Plot<T> {
   // Data coords -> canvas coords, scaled by pixel ratio.
   dataToCanvas(x: number, y: number): [number, number] {
     const xy = this.dataToScreen(x, y);
-    return scaleVec2(xy, window.devicePixelRatio);
+    return utils.scaleVec2(xy, window.devicePixelRatio);
   }
 
   // TODO: Include gutter?
@@ -802,7 +786,7 @@ export class Plot<T> {
       height: 1,
     });
 
-    const id = rgbToHex(r, g, b);
+    const id = utils.rgbToHex(r, g, b);
 
     return id > 0 ? this.slotToPoint.get(id-1) : null;
 
