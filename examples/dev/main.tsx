@@ -40,9 +40,9 @@ class Page extends React.Component {
       canvas: this.canvasRef.current!,
       points,
       getPosition: p => [p.x, p.y],
-      getSize: p => 1,
-      getMaxSize: p => Infinity,
-      getColor: p => [0, 0, 0],
+      getSize: () => 1,
+      getMaxSize: () => Infinity,
+      getColor: () => [0, 0, 0],
     });
 
   }
