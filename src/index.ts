@@ -3,6 +3,8 @@
 import REGL from 'regl';
 import { debounce, range, clamp } from 'lodash';
 import TWEEN from '@tweenjs/tween.js';
+
+// TODO: Update to rxjs 7.
 import { Subject } from 'rxjs';
 
 // TODO: Just import what we're using, to save size.
@@ -364,6 +366,7 @@ export class Plot<T> {
   getMaxSize: (p: T) => number;
   getColor: (p: T) => [number, number, number];
 
+  // TODO: rxjs too heavy for this?
   // TODO: Camel case?
   events = {
     click: new Subject<MouseEvent>(),
@@ -378,6 +381,7 @@ export class Plot<T> {
     unselect: new Subject(),
   };
 
+  // TODO: Do we need this?
   // TODO: Make private; use setGutter(), which update visibleBounds subject.
   gutter = {
     left: 0,
@@ -412,6 +416,7 @@ export class Plot<T> {
     this.xyScale = opts.xyScale || 1;
     this.moveStartPixels = opts.moveStartPixels || 2;
 
+    // TODO: Fall back to defaults for everything except getPosition.
     this.getPosition = opts.getPosition;
     this.getSize = opts.getSize;
     this.getMaxSize = opts.getMaxSize;
