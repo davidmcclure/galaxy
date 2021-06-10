@@ -42,7 +42,7 @@ class Page extends React.Component {
       getPosition: p => [p.x, p.y],
       getSize: () => 1,
       getMaxSize: () => Infinity,
-      getColor: () => [0, 0, 0],
+      getColor: () => [0, 0, 1],
     });
 
   }
