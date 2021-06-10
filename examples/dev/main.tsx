@@ -1,21 +1,40 @@
 
-import React from 'react';
+import React, { createRef } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+
+import { Plot } from '../../src';
+
+
+interface Point {
+  x: number;
+  y: number;
+}
 
 
 class Page extends React.Component {
 
+  private canvasRef = createRef<HTMLCanvasElement>();
+
   render() {
     return (
-      <div className="w-screen h-screen bg-red-500">
-        <canvas></canvas>
+      <div className="w-screen h-screen">
+        <canvas ref={this.canvasRef}></canvas>
       </div>
     )
   }
 
   componentDidMount() {
-    alert('test');
+
+    const plot = new Plot<Point>({
+      canvas: this.canvasRef.current!,
+      points: [{x: 0, y: 0}],
+      getPosition: p => [p.x, p.y],
+      getSize: p => 100,
+      getMaxSize: p => Infinity,
+      getColor: p => [0, 0, 0],
+    });
+
   }
 
 }
