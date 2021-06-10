@@ -16,3 +16,40 @@ export function hexToRgb(hex: number): [number, number, number] {
 export function scaleVec2(vec: [number, number], k: number): [number, number] {
   return [vec[0] * k, vec[1] * k];
 }
+
+
+export function drawPointImage(opts: Partial<{
+  radius: number,
+  lineWidth: number,
+  fillStyle: string,
+  strokeStyle: string,
+  lineDash: number[],
+}>) {
+
+  // TODO: Do this ^ in signature?
+  const {
+    radius = 100,
+    lineWidth = 10,
+    fillStyle = 'white',
+    strokeStyle = 'black',
+    lineDash = [],
+  } = opts;
+
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d')!;
+
+  canvas.width = canvas.height = radius * 2;
+  context.fillStyle = fillStyle;
+  context.strokeStyle = strokeStyle;
+  context.lineWidth = lineWidth;
+
+  context.setLineDash(lineDash);
+
+  context.beginPath();
+  context.arc(radius, radius, radius - (lineWidth / 2), 0, 2 * Math.PI);
+  context.fill();
+  context.stroke();
+
+  return canvas;
+
+}

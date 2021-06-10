@@ -14,3 +14,6 @@ plugins
 - hl/select point
 - tooltips
 - geom anns (editable?)
+
+reach
+- transitions
