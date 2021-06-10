@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { range } from 'lodash';
 import { randomUniform } from 'd3';
 
-import { Plot } from '../../src';
+import Plot from '../../src';
 import './index.css';
 
 
