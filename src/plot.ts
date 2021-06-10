@@ -48,18 +48,17 @@ export default class Plot<T> {
   getColor: (p: T) => [number, number, number];
 
   // TODO: rxjs too heavy for this?
-  // TODO: Camel case?
   events = {
     click: new Subject<MouseEvent>(),
-    movestart: new Subject<d3.ZoomTransform>(),
-    moveend: new Subject<d3.ZoomTransform>(),
+    moveStart: new Subject<d3.ZoomTransform>(),
+    moveEnd: new Subject<d3.ZoomTransform>(),
     render: new Subject<void>(),
-    pickingrender: new Subject<void>(),
-    mouseleave: new Subject<void>(),
+    pickingRender: new Subject<void>(),
+    mouseLeave: new Subject<void>(),
     highlight: new Subject<T>(),
-    unhighlight: new Subject<void>(),
+    unHighlight: new Subject<void>(),
     select: new Subject<T>(),
-    unselect: new Subject<void>(),
+    unSelect: new Subject<void>(),
   };
 
   // TODO: Do we need this?
@@ -369,7 +368,7 @@ export default class Plot<T> {
       });
 
       this.requestPickingRender = false;
-      this.events.pickingrender.next();
+      this.events.pickingRender.next();
 
     }
 
@@ -405,7 +404,7 @@ export default class Plot<T> {
     // Set isMoving when distance > threshold.
     if (!this.isMoving && this.hasMovedFromStart()) {
       this.isMoving = true;
-      this.events.movestart.next(this.transform);
+      this.events.moveStart.next(this.transform);
     }
 
   }
@@ -416,7 +415,7 @@ export default class Plot<T> {
 
     // Only publish the event if the distance > threshold.
     if (this.isMoving) {
-      this.events.moveend.next(this.transform);
+      this.events.moveEnd.next(this.transform);
     }
 
     this.isMoving = false;
@@ -434,7 +433,7 @@ export default class Plot<T> {
     if (point) {
       this.events.highlight.next(point);
     } else {
-      this.events.unhighlight.next();
+      this.events.unHighlight.next();
     }
 
   }
@@ -448,7 +447,7 @@ export default class Plot<T> {
     if (point) {
       this.events.select.next(point);
     } else {
-      this.events.unselect.next();
+      this.events.unSelect.next();
     }
 
     this.events.click.next(e);
@@ -456,7 +455,7 @@ export default class Plot<T> {
   }
 
   private onMouseLeave() {
-    this.events.mouseleave.next();
+    this.events.mouseLeave.next();
   }
 
   private pickAtCursor(e: MouseEvent) {
