@@ -1,11 +1,24 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-)
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+
+
+class Page extends React.Component {
+
+  render() {
+    return (
+      <div className="w-screen h-screen bg-red-500">
+        <canvas></canvas>
+      </div>
+    )
+  }
+
+  componentDidMount() {
+    alert('test');
+  }
+
+}
+
+
+ReactDOM.render(<Page />, document.getElementById('root'));
