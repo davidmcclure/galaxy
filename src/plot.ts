@@ -53,13 +53,13 @@ export default class Plot<T> {
     click: new Subject<MouseEvent>(),
     movestart: new Subject<d3.ZoomTransform>(),
     moveend: new Subject<d3.ZoomTransform>(),
-    render: new Subject(),
-    pickingrender: new Subject(),
-    mouseleave: new Subject(),
+    render: new Subject<void>(),
+    pickingrender: new Subject<void>(),
+    mouseleave: new Subject<void>(),
     highlight: new Subject<T>(),
-    unhighlight: new Subject(),
+    unhighlight: new Subject<void>(),
     select: new Subject<T>(),
-    unselect: new Subject(),
+    unselect: new Subject<void>(),
   };
 
   // TODO: Do we need this?

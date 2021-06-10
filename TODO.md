@@ -1,8 +1,8 @@
 
+destroy / clean up
 default params
 AA points
 update to rxjs 7
-destroy / clean up
 just import necessary d3 code
 pluggable shader abstraction
 fade in BG points
