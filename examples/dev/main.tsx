@@ -4,6 +4,7 @@ import React, { createRef } from 'react';
 import ReactDOM from 'react-dom';
 import { range } from 'lodash';
 import { randomUniform } from 'd3';
+import { useControls } from 'leva';
 
 import Plot, { Bounds } from '../../src';
 import './index.css';
@@ -15,6 +16,15 @@ interface Point {
 }
 
 
+function Controls() {
+  const vals = useControls({
+    numPoints: 1_000_000,
+    color: 'blue',
+  });
+  return null;
+}
+
+
 class Page extends React.Component {
 
   private canvasRef = createRef<HTMLCanvasElement>();
@@ -23,6 +33,7 @@ class Page extends React.Component {
     return (
       <div className="w-screen h-screen">
         <canvas ref={this.canvasRef}></canvas>
+        <Controls />
       </div>
     )
   }
