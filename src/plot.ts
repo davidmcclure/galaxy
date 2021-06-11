@@ -3,8 +3,6 @@
 import REGL from 'regl';
 import { range, clamp } from 'lodash';
 import TWEEN from '@tweenjs/tween.js';
-
-// TODO: Update to rxjs 7.
 import { Subject } from 'rxjs';
 
 // TODO: Just import what we're using, to save size.

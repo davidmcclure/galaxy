@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { range } from 'lodash';
 import { randomUniform } from 'd3';
 
-import Plot from '../../src';
+import Plot, { Bounds } from '../../src';
 import './index.css';
 
 
@@ -31,7 +31,7 @@ class Page extends React.Component {
 
     const randCoord = randomUniform(0, 1000);
 
-    const points = range(100_000).map(i => ({
+    const points = range(2000000).map(i => ({
       x: randCoord(),
       y: randCoord(),
     }));
@@ -44,6 +44,15 @@ class Page extends React.Component {
       getMaxSize: () => Infinity,
       getColor: () => [0, 0, 1],
     });
+
+    const bounds = new Bounds({
+      minX: 0,
+      maxX: 1000,
+      minY: 0,
+      maxY: 1000,
+    });
+
+    plot.moveToBounds(bounds.pad(500));
 
   }
 
