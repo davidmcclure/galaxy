@@ -10,7 +10,7 @@ export default class OverlayCanvas {
   private onResizeDebounced = debounce(this.onResize.bind(this), 500);
 
   events = {
-    resize: new Subject(),
+    resize: new Subject<void>(),
   };
 
   constructor(public el: HTMLCanvasElement) {

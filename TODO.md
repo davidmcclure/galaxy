@@ -1,4 +1,5 @@
 
+event emitter
 destroy / clean up
 default params
 AA points
