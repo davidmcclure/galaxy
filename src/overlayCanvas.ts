@@ -1,13 +1,15 @@
 
 
 import { debounce } from 'lodash';
-import { Subject } from 'rxjs';
+import { Subject, fromEvent, Subscription } from 'rxjs';
 
 
 export default class OverlayCanvas {
 
   container: HTMLElement;
+
   private onResizeDebounced = debounce(this.onResize.bind(this), 500);
+  private resizeSub: Subscription;
 
   events = {
     resize: new Subject<void>(),
@@ -18,16 +20,18 @@ export default class OverlayCanvas {
     // TODO: Will the parent always be the container?
     this.container = el.parentElement!;
 
+    this.onResize();
+
     // TODO: Resize listener directly on the container?
     // Sync after window resize.
-    window.addEventListener('resize', this.onResizeDebounced);
-    this.onResize();
+    this.resizeSub = fromEvent(window, 'resize')
+      .subscribe(this.onResize.bind(this));
 
   }
 
-  // TODO: Does this remove the listeners for all instances?
   destroy() {
-    window.removeEventListener('resize', this.onResizeDebounced);
+    this.resizeSub.unsubscribe();
+    Object.values(this.events).forEach(s => s.complete());
   }
 
   private onResize() {

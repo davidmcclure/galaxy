@@ -267,10 +267,10 @@ export default class Plot<T> {
       fromEvent<MouseEvent>(this.canvas.container, 'mouseleave')
         .subscribe(this.onMouseLeave.bind(this)),
 
-    ];
+      this.canvas.events.resize
+        .subscribe(this.onResize.bind(this)),
 
-    // TODO: Unsubscribe from this?
-    this.canvas.events.resize.subscribe(this.onResize.bind(this));
+    ];
 
   }
 
@@ -290,7 +290,8 @@ export default class Plot<T> {
     // Complete event subjects.
     Object.values(this.events).forEach(e => e.complete());
 
-    // resize listener?
+    // Destroy the canvas resize wrapper.
+    this.canvas.destroy();
 
   }
 
