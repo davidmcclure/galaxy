@@ -92,7 +92,10 @@ export default class Plot<T> {
     this.getMaxSize = opts.getMaxSize;
     this.getColor = opts.getColor;
 
-    this.regl = REGL({canvas: this.canvas.el});
+    this.regl = REGL({
+      canvas: this.canvas.el,
+      extensions: ['OES_standard_derivatives'],
+    });
 
     this.zoom = d3.zoom<HTMLElement, any>().clickDistance(5);
     this.zoomContainer = d3.select(this.canvas.container);

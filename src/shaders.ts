@@ -57,9 +57,11 @@ uniform float pixelRatio;
 uniform float xyScale;
 uniform float minSize;
 
-varying vec3 vColor;
-varying vec3 vPickingColor;
 varying float vPointSize;
+varying vec3 vColor;
+varying float vAlpha;
+varying vec3 vBorderColor;
+varying vec3 vPickingColor;
 
 ${GET_POSITION}
 ${GET_POINT_SIZE}
@@ -69,35 +71,57 @@ void main() {
   gl_Position = getPosition();
   gl_PointSize = getPointSize();
 
-  vColor = color;
-  vPickingColor = pickingColor;
+  float bigness = smoothstep(30.0, 70.0, gl_PointSize);
+  float alpha = 1.0 - (bigness * 0.0);
+  vec3 borderColor = mix(color, vec3(0, 0, 0), bigness);
+
   vPointSize = gl_PointSize;
+  vColor = color;
+  vAlpha = alpha;
+  vBorderColor = borderColor;
+
+  vPickingColor = pickingColor;
   
 }`;
 
 
 // TODO: Parametrize size constants.
 export const DISPLAY_FRAGMENT_SHADER = `
+#extension GL_OES_standard_derivatives : enable
 precision mediump float;
 
 uniform sampler2D texture;
 
-varying vec3 vColor;
 varying float vPointSize;
+varying vec3 vColor;
+varying float vAlpha;
+varying vec3 vBorderColor;
 
 void main() {
 
-  float alpha = 1.0 - (smoothstep(30.0, 70.0, vPointSize) * 0.1);
+  vec2 cxy = 2.0 * gl_PointCoord - 1.0;
+  float r = dot(cxy, cxy);
 
-  if (vPointSize > 30.0) {
-    vec4 pixel = texture2D(texture, gl_PointCoord);
-    gl_FragColor = pixel * vec4(vColor.xyz, alpha);
+  if (r > 1.0) discard;
+
+  else if (vPointSize < 30.0) {
+    gl_FragColor = vec4(vColor, vAlpha);
   }
 
   else {
-    vec2 cxy = 2.0 * gl_PointCoord - 1.0;
-    if (dot(cxy, cxy) > 1.0) discard;
-    gl_FragColor = vec4(vColor, alpha);
+
+    float delta = fwidth(r);
+
+    float alpha = 1.0 - smoothstep(1.0 - delta, 1.0 + delta, r);
+
+    // vec3 color = mix(
+    //   vColor,
+    //   vBorderColor,
+    //   smoothstep(0.9 - delta, 0.9 + delta, r)
+    // );
+
+    gl_FragColor = vec4(vColor, vAlpha * alpha);
+
   }
 
 }`;
@@ -110,7 +134,6 @@ varying float vPointSize;
 
 void main() {
   vec2 cxy = 2.0 * gl_PointCoord - 1.0;
-  float r = dot(cxy, cxy);
-  if (r > 1.0) discard;
+  if (dot(cxy, cxy) > 1.0) discard;
   gl_FragColor = vec4(vPickingColor, 1);
 }`;

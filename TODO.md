@@ -1,5 +1,6 @@
 
 AA points; pluggable shader abstraction / settings
+parametrize base alpha
 event emitter - replace rxjs?
 pixel ratio option
 default params
