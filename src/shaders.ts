@@ -1,30 +1,31 @@
 
 
-// TODO: Pass args?
-// position, xyScale, transform, pixelRatio, width, height
-export const GET_POSITION = `
-vec4 getPosition() {
+// // TODO: Pass args?
+// // position, xyScale, transform, pixelRatio, width, height
+// export const GET_POSITION = `
+// vec4 getPosition() {
 
-  vec2 xy = ((position * xyScale * transform.z) +
-    vec2(transform.x, -transform.y)) * pixelRatio * vec2(1, -1);
+//   vec2 xy = ((position * xyScale * transform.z) +
+//     vec2(transform.x, -transform.y)) * pixelRatio * vec2(1, -1);
 
-  float ndcX = 2.0 * ((xy.x / width) - 0.5);
-  float ndcY = -(2.0 * ((xy.y / height) - 0.5));
+//   float ndcX = 2.0 * ((xy.x / width) - 0.5);
+//   float ndcY = -(2.0 * ((xy.y / height) - 0.5));
 
-  return vec4(ndcX, ndcY, 0, 1);
+//   return vec4(ndcX, ndcY, 0, 1);
 
-}`;
-
-
-// TODO: Pass args?
-// size, minSize, maxSize, transform, pixelRatio
-export const GET_POINT_SIZE = `
-float getPointSize() {
-  return max(min(size * transform[2], maxSize), minSize) * pixelRatio;
-}`;
+// }`;
 
 
-// Needs to exactly match ^^, so that point sizes can be calculated in JS.
+// // TODO: Pass args?
+// // size, minSize, maxSize, transform, pixelRatio
+// export const GET_POINT_SIZE = `
+// float getPointSize() {
+//   return max(min(size * transform[2], maxSize), minSize) * pixelRatio;
+// }`;
+
+
+// NOTE: Has to be kept exactly in sync with the shader logic, so that point
+// sizes can be calculated in JS.
 export function getShaderPointSize(
   size: number,
   k: number,
@@ -64,13 +65,17 @@ varying float vPointSize;
 varying float vAlpha;
 varying vec3 vBorderColor;
 
-${GET_POSITION}
-${GET_POINT_SIZE}
-
 void main() {
 
-  gl_Position = getPosition();
-  gl_PointSize = getPointSize();
+  vec2 xy = ((position * xyScale * transform.z) +
+    vec2(transform.x, -transform.y)) * pixelRatio * vec2(1, -1);
+
+  float ndcX = 2.0 * ((xy.x / width) - 0.5);
+  float ndcY = -(2.0 * ((xy.y / height) - 0.5));
+
+  gl_Position = vec4(ndcX, ndcY, 0, 1);
+
+  gl_PointSize = max(min(size * transform[2], maxSize), minSize) * pixelRatio;
 
   vColor = color;
   vPickingColor = pickingColor;
