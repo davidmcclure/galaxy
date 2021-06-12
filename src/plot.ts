@@ -3,7 +3,7 @@
 import REGL from 'regl';
 import { range, clamp } from 'lodash';
 import TWEEN from '@tweenjs/tween.js';
-import { Subject } from 'rxjs';
+import { Subject, fromEvent } from 'rxjs';
 
 // TODO: Just import what we're using, to save size.
 import * as d3 from 'd3';
@@ -265,6 +265,22 @@ export default class Plot<T> {
 
     this.canvas.container.addEventListener('mouseleave',
       this.onMouseLeave.bind(this));
+
+  }
+
+  destroy() {
+
+    // Destroy regl context.
+    // https://github.com/regl-project/regl/blob/master/API.md#clean-up
+    this.regl.destroy();
+
+    // Unbind zoom listeners.
+    // https://github.com/d3/d3-zoom/blob/main/README.md#_zoom
+    this.zoomContainer.on('.zoom', null);
+
+    // container listeners
+    // canvas listeners
+    // event subscriptions
 
   }
 

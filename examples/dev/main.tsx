@@ -75,7 +75,7 @@ function Page2() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const settings = useControls({
-    numPoints: 1_000_000,
+    numPoints: 100000,
   });
 
   useEffect(() => {
@@ -104,6 +104,10 @@ function Page2() {
     });
 
     plot.moveToBounds(bounds.pad(500));
+
+    return () => {
+      plot.destroy();
+    }
 
   });
 
