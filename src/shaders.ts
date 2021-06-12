@@ -143,7 +143,7 @@ void main() {
 }`;
 
 
-export class Shaders {
+export class BaseShaders {
 
   get vertex() {
     return `
@@ -175,14 +175,15 @@ export class Shaders {
 
       gl_Position = vec4(ndcX, ndcY, 0, 1);
 
-      gl_PointSize = max(min(size * transform[2], maxSize), minSize) * pixelRatio;
+      gl_PointSize = max(min(size * transform.z, maxSize), minSize) * pixelRatio;
 
       vColor = color;
       vPickingColor = pickingColor;
 
-      ${this.vertexMain}
+      ${this.extraVertexMain}
 
-    }`;
+    }
+    `;
   }
 
   get fragment() {
@@ -195,7 +196,8 @@ export class Shaders {
 
     void main() {
       ${this.fragmentMain}
-    }`;
+    }
+    `;
   }
 
   get pickingFragment() {
@@ -207,8 +209,31 @@ export class Shaders {
       vec2 cxy = 2.0 * gl_PointCoord - 1.0;
       if (dot(cxy, cxy) > 1.0) discard;
       gl_FragColor = vec4(vPickingColor, 1);
-    }`;
+    }
+    `;
   }
+
+  get extraVarying() {
+    return '';
+  }
+
+  get extraVertexMain() {
+    return '';
+  }
+
+  get fragmentMain() {
+    return `
+    vec2 cxy = 2.0 * gl_PointCoord - 1.0;
+    float r = dot(cxy, cxy);
+    if (r > 1.0) discard;
+    gl_FragColor = vec4(vColor, 1.0);
+    `
+  }
+
+}
+
+
+export class Shaders extends BaseShaders {
 
   get extraVarying() {
     return `
@@ -218,7 +243,7 @@ export class Shaders {
     `;
   }
 
-  get vertexMain() {
+  get extraVertexMain() {
     return `
     float bigness = smoothstep(30.0, 70.0, gl_PointSize);
     float alpha = 1.0 - (bigness * 0.3);
@@ -237,7 +262,7 @@ export class Shaders {
 
     if (r > 1.0) discard;
 
-    else if (vPointSize < 30.0) {
+    else if (vPointSize < 5.0) {
       gl_FragColor = vec4(vColor, vAlpha);
     }
 
@@ -255,7 +280,8 @@ export class Shaders {
 
       gl_FragColor = vec4(color, vAlpha * alpha);
 
-    }`
+    }
+    `;
   }
 
 }

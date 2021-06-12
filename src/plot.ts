@@ -9,7 +9,7 @@ import { Subject, fromEvent, Subscription } from 'rxjs';
 import * as d3 from 'd3';
 
 import * as utils from './utils';
-import { Shaders } from './shaders';
+import { BaseShaders, Shaders } from './shaders';
 import Bounds from './bounds';
 import OverlayCanvas from './overlayCanvas';
 
