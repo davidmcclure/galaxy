@@ -504,6 +504,7 @@ export default class Plot<T> {
 
   }
 
+  // TODO: Make it possible to pass gutter offsets.
   moveToBounds(bounds: Bounds, duration = 0) {
 
     const width = this.canvas.cssWidth;

@@ -1,9 +1,8 @@
 
-destroy / clean up
-event emitter
+AA points; pluggable shader abstraction / settings
+event emitter - replace rxjs?
 pixel ratio option
 default params
-AA points; pluggable shader abstraction / settings
 just import necessary d3 code
 fade in BG points
 tests
