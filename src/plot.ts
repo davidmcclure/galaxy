@@ -3,7 +3,7 @@
 import REGL from 'regl';
 import { range, clamp } from 'lodash';
 import TWEEN from '@tweenjs/tween.js';
-import { Subject, fromEvent } from 'rxjs';
+import { Subject, fromEvent, Subscription } from 'rxjs';
 
 // TODO: Just import what we're using, to save size.
 import * as d3 from 'd3';
@@ -80,6 +80,7 @@ export default class Plot<T> {
   private requestPickingRender = true;
   private moveStartPixels: number;
   private zoomStartTransform: d3.ZoomTransform;
+  private containerSubs: Subscription[];
 
   private position: REGL.Buffer;
   private size: REGL.Buffer;
@@ -257,14 +258,27 @@ export default class Plot<T> {
     this.zoom.on('start', this.onZoomStart.bind(this));
     this.zoom.on('end', this.onZoomEnd.bind(this));
 
-    this.canvas.container.addEventListener('mousemove',
-      this.onMouseMove.bind(this));
+    this.containerSubs = [
 
-    this.canvas.container.addEventListener('click',
-      this.onClick.bind(this));
+      fromEvent<MouseEvent>(this.canvas.container, 'mousemove')
+        .subscribe(this.onMouseMove.bind(this)),
 
-    this.canvas.container.addEventListener('mouseleave',
-      this.onMouseLeave.bind(this));
+      fromEvent<MouseEvent>(this.canvas.container, 'click')
+        .subscribe(this.onClick.bind(this)),
+
+      fromEvent<MouseEvent>(this.canvas.container, 'mouseleave')
+        .subscribe(this.onMouseLeave.bind(this)),
+
+    ];
+
+    // this.canvas.container.addEventListener('mousemove',
+    //   this.onMouseMove.bind(this));
+
+    // this.canvas.container.addEventListener('click',
+    //   this.onClick.bind(this));
+
+    // this.canvas.container.addEventListener('mouseleave',
+    //   this.onMouseLeave.bind(this));
 
   }
 
@@ -278,7 +292,9 @@ export default class Plot<T> {
     // https://github.com/d3/d3-zoom/blob/main/README.md#_zoom
     this.zoomContainer.on('.zoom', null);
 
-    // container listeners
+    // Unbind container listeners.
+    this.containerSubs.forEach(s => s.unsubscribe());
+
     // canvas listeners
     // event subscriptions
 
@@ -453,6 +469,8 @@ export default class Plot<T> {
   }
 
   private onClick(e: MouseEvent) {
+
+    console.log('click');
 
     // TODO: Block if moving?
 
