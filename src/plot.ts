@@ -80,7 +80,7 @@ export default class Plot<T> {
   private requestPickingRender = true;
   private moveStartPixels: number;
   private zoomStartTransform: d3.ZoomTransform;
-  private containerSubs: Subscription[];
+  private subscriptions: Subscription[];
 
   private position: REGL.Buffer;
   private size: REGL.Buffer;
@@ -250,15 +250,13 @@ export default class Plot<T> {
       this.canvas.height,
     );
 
-    this.canvas.events.resize.subscribe(this.onResize.bind(this));
-
     this.regl.frame(this.onFrame.bind(this));
 
     this.zoom.on('zoom', this.onZoom.bind(this));
     this.zoom.on('start', this.onZoomStart.bind(this));
     this.zoom.on('end', this.onZoomEnd.bind(this));
 
-    this.containerSubs = [
+    this.subscriptions = [
 
       fromEvent<MouseEvent>(this.canvas.container, 'mousemove')
         .subscribe(this.onMouseMove.bind(this)),
@@ -271,14 +269,8 @@ export default class Plot<T> {
 
     ];
 
-    // this.canvas.container.addEventListener('mousemove',
-    //   this.onMouseMove.bind(this));
-
-    // this.canvas.container.addEventListener('click',
-    //   this.onClick.bind(this));
-
-    // this.canvas.container.addEventListener('mouseleave',
-    //   this.onMouseLeave.bind(this));
+    // TODO: Unsubscribe from this?
+    this.canvas.events.resize.subscribe(this.onResize.bind(this));
 
   }
 
@@ -293,10 +285,12 @@ export default class Plot<T> {
     this.zoomContainer.on('.zoom', null);
 
     // Unbind container listeners.
-    this.containerSubs.forEach(s => s.unsubscribe());
+    this.subscriptions.forEach(s => s.unsubscribe());
 
-    // canvas listeners
-    // event subscriptions
+    // Complete event subjects.
+    Object.values(this.events).forEach(e => e.complete());
+
+    // resize listener?
 
   }
 
@@ -469,8 +463,6 @@ export default class Plot<T> {
   }
 
   private onClick(e: MouseEvent) {
-
-    console.log('click');
 
     // TODO: Block if moving?
 

@@ -105,6 +105,8 @@ function Page2() {
 
     plot.moveToBounds(bounds.pad(500));
 
+    // plot.events.click.subscribe(() => console.log('click'));
+
     return () => {
       plot.destroy();
     }
