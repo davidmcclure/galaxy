@@ -57,11 +57,12 @@ uniform float pixelRatio;
 uniform float xyScale;
 uniform float minSize;
 
-varying float vPointSize;
 varying vec3 vColor;
+varying vec3 vPickingColor;
+
+varying float vPointSize;
 varying float vAlpha;
 varying vec3 vBorderColor;
-varying vec3 vPickingColor;
 
 ${GET_POSITION}
 ${GET_POINT_SIZE}
@@ -71,16 +72,17 @@ void main() {
   gl_Position = getPosition();
   gl_PointSize = getPointSize();
 
+  vColor = color;
+  vPickingColor = pickingColor;
+
   float bigness = smoothstep(30.0, 70.0, gl_PointSize);
-  float alpha = 1.0 - (bigness * 0.0);
+  float alpha = 1.0 - (bigness * 0.3);
   vec3 borderColor = mix(color, vec3(0, 0, 0), bigness);
 
   vPointSize = gl_PointSize;
-  vColor = color;
   vAlpha = alpha;
   vBorderColor = borderColor;
 
-  vPickingColor = pickingColor;
   
 }`;
 
@@ -90,10 +92,9 @@ export const DISPLAY_FRAGMENT_SHADER = `
 #extension GL_OES_standard_derivatives : enable
 precision mediump float;
 
-uniform sampler2D texture;
+varying vec3 vColor;
 
 varying float vPointSize;
-varying vec3 vColor;
 varying float vAlpha;
 varying vec3 vBorderColor;
 
@@ -114,13 +115,13 @@ void main() {
 
     float alpha = 1.0 - smoothstep(1.0 - delta, 1.0 + delta, r);
 
-    // vec3 color = mix(
-    //   vColor,
-    //   vBorderColor,
-    //   smoothstep(0.9 - delta, 0.9 + delta, r)
-    // );
+    vec3 color = mix(
+      vColor,
+      vBorderColor,
+      smoothstep(0.9 - delta, 0.9 + delta, r)
+    );
 
-    gl_FragColor = vec4(vColor, vAlpha * alpha);
+    gl_FragColor = vec4(color, vAlpha * alpha);
 
   }
 
@@ -130,7 +131,6 @@ void main() {
 export const PICKING_FRAGMENT_SHADER = `
 precision mediump float;
 varying vec3 vPickingColor;
-varying float vPointSize;
 
 void main() {
   vec2 cxy = 2.0 * gl_PointCoord - 1.0;
