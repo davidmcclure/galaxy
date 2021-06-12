@@ -59,15 +59,6 @@ export default class Plot<T> {
     unSelect: new Subject<void>(),
   };
 
-  // TODO: Do we need this?
-  // TODO: Make private; use setGutter(), which update visibleBounds subject.
-  gutter = {
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-  }
-
   private regl: REGL.Regl;
   private pickingFrameBuffer: REGL.Framebuffer2D;
   private zoomContainer: d3.Selection<HTMLElement, any, any, any>;
@@ -515,15 +506,15 @@ export default class Plot<T> {
 
   moveToBounds(bounds: Bounds, duration = 0) {
 
-    const width = this.canvas.cssWidth - this.gutter.left - this.gutter.right;
-    const height = this.canvas.cssHeight - this.gutter.top - this.gutter.bottom;
+    const width = this.canvas.cssWidth;
+    const height = this.canvas.cssHeight;
 
     const {minX, minY, maxX, maxY} = bounds.scale(this.xyScale);
 
     const transform = d3.zoomIdentity
       .translate(
-        this.gutter.left + (width / 2),
-        this.gutter.top + (height / 2),
+        width / 2,
+        height / 2,
       )
       .scale(
         1 / Math.max(
