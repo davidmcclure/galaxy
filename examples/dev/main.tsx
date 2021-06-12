@@ -1,6 +1,6 @@
 
 
-import React, { createRef } from 'react';
+import React, { createRef, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { range } from 'lodash';
 import { randomUniform } from 'd3';
@@ -70,4 +70,50 @@ class Page extends React.Component {
 }
 
 
-ReactDOM.render(<Page />, document.getElementById('root'));
+function Page2() {
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const settings = useControls({
+    numPoints: 1_000_000,
+  });
+
+  useEffect(() => {
+
+    const randCoord = randomUniform(0, 1000);
+
+    const points = range(settings.numPoints).map(i => ({
+      x: randCoord(),
+      y: randCoord(),
+    }));
+
+    const plot = new Plot<Point>({
+      canvas: canvasRef.current!,
+      points,
+      getPosition: p => [p.x, p.y],
+      getSize: () => 1,
+      getMaxSize: () => Infinity,
+      getColor: () => [0, 0, 1],
+    });
+
+    const bounds = new Bounds({
+      minX: 0,
+      maxX: 1000,
+      minY: 0,
+      maxY: 1000,
+    });
+
+    plot.moveToBounds(bounds.pad(500));
+
+  });
+
+  return (
+    <div className="w-screen h-screen">
+      <canvas ref={canvasRef}></canvas>
+    </div>
+  )
+
+}
+
+
+ReactDOM.render(<Page2 />, document.getElementById('root'));
