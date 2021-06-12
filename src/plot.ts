@@ -9,7 +9,7 @@ import { Subject, fromEvent, Subscription } from 'rxjs';
 import * as d3 from 'd3';
 
 import * as utils from './utils';
-import * as shaders from './shaders';
+import { Shaders } from './shaders';
 import Bounds from './bounds';
 import OverlayCanvas from './overlayCanvas';
 
@@ -192,8 +192,10 @@ export default class Plot<T> {
 
     const primitive: REGL.PrimitiveType = 'points';
 
+    const shaders = new Shaders();
+
     const sharedConfig = {
-      vert: shaders.DISPLAY_VERTEX_SHADER,
+      vert: shaders.vertex,
       attributes,
       primitive,
       // Render BG + FG points.
@@ -208,7 +210,7 @@ export default class Plot<T> {
     this.drawPoints = this.regl<DisplayUniforms, Attributes, Props>({
       
       ...sharedConfig,
-      frag: shaders.DISPLAY_FRAGMENT_SHADER,
+      frag: shaders.fragment,
 
       uniforms: {
         ...sharedUniforms,
@@ -229,7 +231,7 @@ export default class Plot<T> {
     this.drawPickingPoints = this.regl<Uniforms, Attributes, Props>({
       
       ...sharedConfig,
-      frag: shaders.PICKING_FRAGMENT_SHADER,
+      frag: shaders.pickingFragment,
 
       uniforms: {
         ...sharedUniforms,

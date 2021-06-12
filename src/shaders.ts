@@ -141,3 +141,121 @@ void main() {
   if (dot(cxy, cxy) > 1.0) discard;
   gl_FragColor = vec4(vPickingColor, 1);
 }`;
+
+
+export class Shaders {
+
+  get vertex() {
+    return `
+    attribute vec2 position;
+    attribute float size;
+    attribute float maxSize;
+    attribute vec3 color;
+    attribute vec3 pickingColor;
+
+    uniform vec3 transform;
+    uniform float width;
+    uniform float height;
+    uniform float pixelRatio;
+    uniform float xyScale;
+    uniform float minSize;
+
+    varying vec3 vColor;
+    varying vec3 vPickingColor;
+
+    ${this.extraVarying}
+    
+    void main() {
+
+      vec2 xy = ((position * xyScale * transform.z) +
+        vec2(transform.x, -transform.y)) * pixelRatio * vec2(1, -1);
+
+      float ndcX = 2.0 * ((xy.x / width) - 0.5);
+      float ndcY = -(2.0 * ((xy.y / height) - 0.5));
+
+      gl_Position = vec4(ndcX, ndcY, 0, 1);
+
+      gl_PointSize = max(min(size * transform[2], maxSize), minSize) * pixelRatio;
+
+      vColor = color;
+      vPickingColor = pickingColor;
+
+      ${this.vertexMain}
+
+    }`;
+  }
+
+  get fragment() {
+    return `
+    #extension GL_OES_standard_derivatives : enable
+    precision mediump float;
+
+    varying vec3 vColor;
+    ${this.extraVarying}
+
+    void main() {
+      ${this.fragmentMain}
+    }`;
+  }
+
+  get pickingFragment() {
+    return `
+    precision mediump float;
+    varying vec3 vPickingColor;
+
+    void main() {
+      vec2 cxy = 2.0 * gl_PointCoord - 1.0;
+      if (dot(cxy, cxy) > 1.0) discard;
+      gl_FragColor = vec4(vPickingColor, 1);
+    }`;
+  }
+
+  get extraVarying() {
+    return `
+    varying float vPointSize;
+    varying float vAlpha;
+    varying vec3 vBorderColor;
+    `;
+  }
+
+  get vertexMain() {
+    return `
+    float bigness = smoothstep(30.0, 70.0, gl_PointSize);
+    float alpha = 1.0 - (bigness * 0.3);
+    vec3 borderColor = mix(color, vec3(0, 0, 0), bigness);
+
+    vPointSize = gl_PointSize;
+    vAlpha = alpha;
+    vBorderColor = borderColor;
+    `;
+  }
+
+  get fragmentMain() {
+    return `
+    vec2 cxy = 2.0 * gl_PointCoord - 1.0;
+    float r = dot(cxy, cxy);
+
+    if (r > 1.0) discard;
+
+    else if (vPointSize < 30.0) {
+      gl_FragColor = vec4(vColor, vAlpha);
+    }
+
+    else {
+
+      float delta = fwidth(r);
+
+      float alpha = 1.0 - smoothstep(1.0 - delta, 1.0 + delta, r);
+
+      vec3 color = mix(
+        vColor,
+        vBorderColor,
+        smoothstep(0.9 - delta, 0.9 + delta, r)
+      );
+
+      gl_FragColor = vec4(color, vAlpha * alpha);
+
+    }`
+  }
+
+}
