@@ -82,7 +82,6 @@ void main() {
   vPointSize = gl_PointSize;
   vAlpha = alpha;
   vBorderColor = borderColor;
-
   
 }`;
 
