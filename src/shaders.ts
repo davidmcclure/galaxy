@@ -246,7 +246,7 @@ export class Shaders extends BaseShaders {
   get extraVertexMain() {
     return `
     float bigness = smoothstep(20.0, 100.0, gl_PointSize);
-    float alpha = 1.0 - (bigness * 0.2);
+    float alpha = 1.0 - (bigness * 0.3);
     vec3 borderColor = mix(color, vec3(0, 0, 0), bigness);
 
     vPointSize = gl_PointSize;
@@ -260,9 +260,8 @@ export class Shaders extends BaseShaders {
     vec2 cxy = 2.0 * gl_PointCoord - 1.0;
     float r = dot(cxy, cxy);
 
-    if (r > 1.0) discard;
-
-    else if (vPointSize < 20.0) {
+    if (vPointSize < 20.0) {
+      if (r > 1.0) discard;
       gl_FragColor = vec4(vColor, vAlpha);
     }
 
@@ -270,7 +269,7 @@ export class Shaders extends BaseShaders {
 
       float delta = fwidth(r);
 
-      float alpha = 1.0 - smoothstep(1.0 - (2.0 * delta), 1.0, r);
+      float alpha = 1.0 - smoothstep(1.0 - delta, 1.0 + delta, r);
 
       vec3 color = mix(
         vColor,
