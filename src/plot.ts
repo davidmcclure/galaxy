@@ -181,7 +181,7 @@ export default class Plot<T> {
 
     const primitive: REGL.PrimitiveType = 'points';
 
-    const shaders = new _shaders.Defaults();
+    const shaders = new _shaders.Default();
 
     const sharedConfig = {
       vert: shaders.vertex,

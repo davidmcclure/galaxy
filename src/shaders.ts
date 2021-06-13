@@ -79,7 +79,7 @@ void main() {
 
 
 // TODO: Parametrize constants.
-export class Defaults {
+export class Default {
 
   private extraVarying = `
     varying float vPointSize;
