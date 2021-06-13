@@ -203,17 +203,8 @@ export default class Plot<T> {
 
       uniforms: {
         ...sharedUniforms,
-        // texture: pointTexture,
         minSize: 0,
       },
-
-      // blend: {
-      //   enable: true,
-      //   func: {
-      //     src: 'src alpha',
-      //     dst: 'one minus src alpha',
-      //   },
-      // },
 
       blend: {
         enable: true,

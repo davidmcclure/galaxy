@@ -1,4 +1,10 @@
 
+NOW
+- DRY toFixed(2)
+- clean up shader import / init in Plot
+- DefaultShaderOpts
+- pass opts or strategy to Plot
+
 AA points; pluggable shader abstraction / settings
 parametrize base alpha?
 event emitter - replace rxjs?
