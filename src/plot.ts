@@ -218,12 +218,27 @@ export default class Plot<T> {
         minSize: 0,
       },
 
+      // blend: {
+      //   enable: true,
+      //   func: {
+      //     src: 'src alpha',
+      //     dst: 'one minus src alpha',
+      //   },
+      // },
+
       blend: {
         enable: true,
         func: {
-          src: 'src alpha',
-          dst: 'one minus src alpha',
+          srcRGB: 'src alpha',
+          srcAlpha: 1,
+          dstRGB: 'one minus src alpha',
+          dstAlpha: 1
         },
+        equation: {
+          rgb: 'add',
+          alpha: 'add'
+        },
+        color: [0, 0, 0, 0]
       },
 
     });
