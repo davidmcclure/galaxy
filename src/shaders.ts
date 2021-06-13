@@ -78,8 +78,25 @@ void main() {
 `;
 
 
-// TODO: Parametrize constants.
-export class Default {
+interface ShaderStrategy {
+  vertex: string;
+  fragment: string;
+  pickingFragment: string;
+}
+
+
+export class Default implements ShaderStrategy {
+
+  constructor(
+    private alpha = 1,
+    private fastAlpha = 1,
+    private bigAlpha = 0.7,
+    private maxFastSize = 20,
+    private bigEdge1 = 20,
+    private bigEdge2 = 100,
+    private borderColor = [0, 0, 0],
+    private borderRatio = 0.05,
+  ) {}
 
   private extraVarying = `
     varying float vPointSize;
@@ -96,9 +113,22 @@ export class Default {
 
       ${VERTEX_MAIN}
 
-      float bigness = smoothstep(20.0, 100.0, gl_PointSize);
-      float alpha = 1.0 - (bigness * 0.3);
-      vec3 borderColor = mix(color, vec3(0, 0, 0), bigness);
+      float bigness = smoothstep(
+        ${this.bigEdge1.toFixed(2)},
+        ${this.bigEdge2.toFixed(2)},
+        gl_PointSize
+      );
+
+      float alpha = (
+        ${this.alpha.toFixed(2)} -
+        (bigness * ${(1 - this.bigAlpha).toFixed(2)})
+      );
+
+      vec3 borderColor = mix(
+        color,
+        vec3(${this.borderColor.map(c => c.toFixed(2)).join(', ')}),
+        bigness
+      );
 
       vPointSize = gl_PointSize;
       vAlpha = alpha;
@@ -118,9 +148,9 @@ export class Default {
       vec2 cxy = 2.0 * gl_PointCoord - 1.0;
       float r = dot(cxy, cxy);
 
-      if (vPointSize < 20.0) {
+      if (vPointSize < ${this.maxFastSize.toFixed(2)}) {
         if (r > 1.0) discard;
-        gl_FragColor = vec4(vColor, 1.0);
+        gl_FragColor = vec4(vColor, ${this.fastAlpha.toFixed(2)});
       }
 
       else {
@@ -133,7 +163,11 @@ export class Default {
         vec3 color = mix(
           vColor,
           vBorderColor,
-          smoothstep(0.95 - delta, 0.95 + delta, r)
+          smoothstep(
+            ${(1 - this.borderRatio).toFixed(2)} - delta,
+            ${(1 - this.borderRatio).toFixed(2)} + delta,
+            r
+          )
         );
 
         gl_FragColor = vec4(color, vAlpha * alpha);
@@ -149,7 +183,7 @@ export class Default {
 }
 
 
-export class FastDots {
+export class FastDots implements ShaderStrategy {
 
   get vertex() {
     return `
@@ -176,7 +210,7 @@ export class FastDots {
 }
 
 
-export class FastSquares {
+export class FastSquares implements ShaderStrategy {
 
   get vertex() {
     return `
