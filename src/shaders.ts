@@ -233,7 +233,7 @@ export class BaseShaders {
 }
 
 
-export class Shaders extends BaseShaders {
+export class DefaultShaders extends BaseShaders {
 
   get extraVarying() {
     return `
