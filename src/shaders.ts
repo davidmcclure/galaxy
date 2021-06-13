@@ -233,6 +233,7 @@ export class BaseShaders {
 }
 
 
+// TODO: Parametrize constants.
 export class DefaultShaders extends BaseShaders {
 
   get extraVarying() {
@@ -243,7 +244,7 @@ export class DefaultShaders extends BaseShaders {
     `;
   }
 
-  // TODO: Set these as uniforms?
+  // TODO: Set "bigness" via uniform(s)?
   get extraVertexMain() {
     return `
     float bigness = smoothstep(20.0, 100.0, gl_PointSize);
@@ -263,7 +264,7 @@ export class DefaultShaders extends BaseShaders {
 
     if (vPointSize < 20.0) {
       if (r > 1.0) discard;
-      gl_FragColor = vec4(vColor, vAlpha);
+      gl_FragColor = vec4(vColor, 1.0);
     }
 
     else {
