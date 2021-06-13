@@ -243,6 +243,7 @@ export class DefaultShaders extends BaseShaders {
     `;
   }
 
+  // TODO: Set these as uniforms?
   get extraVertexMain() {
     return `
     float bigness = smoothstep(20.0, 100.0, gl_PointSize);

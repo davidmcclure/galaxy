@@ -136,12 +136,12 @@ export default class Plot<T> {
 
     const pickingColor = this.regl.buffer(pickingColorData);
 
-    const pointImage = utils.drawPointImage({radius: 256, lineWidth: 30});
+    // const pointImage = utils.drawPointImage({radius: 256, lineWidth: 30});
 
-    const pointTexture = this.regl.texture({
-      data: pointImage,
-      min: 'mipmap',
-    });
+    // const pointTexture = this.regl.texture({
+    //   data: pointImage,
+    //   min: 'mipmap',
+    // });
 
     interface Uniforms {
       transform: REGL.Vec3;
@@ -152,9 +152,9 @@ export default class Plot<T> {
       minSize: number;
     }
 
-    interface DisplayUniforms extends Uniforms {
-      texture: REGL.Texture2D;
-    }
+    // interface DisplayUniforms extends Uniforms {
+    //   texture: REGL.Texture2D;
+    // }
 
     interface Attributes {
       position: REGL.Buffer;
@@ -207,14 +207,14 @@ export default class Plot<T> {
       }
     }
 
-    this.drawPoints = this.regl<DisplayUniforms, Attributes, Props>({
+    this.drawPoints = this.regl<Uniforms, Attributes, Props>({
       
       ...sharedConfig,
       frag: shaders.fragment,
 
       uniforms: {
         ...sharedUniforms,
-        texture: pointTexture,
+        // texture: pointTexture,
         minSize: 0,
       },
 
