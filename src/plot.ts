@@ -9,7 +9,7 @@ import { Subject, fromEvent, Subscription } from 'rxjs';
 import * as d3 from 'd3';
 
 import * as utils from './utils';
-import { DefaultShaders } from './shaders';
+import * as _shaders from './shaders';
 import Bounds from './bounds';
 import OverlayCanvas from './overlayCanvas';
 
@@ -136,13 +136,6 @@ export default class Plot<T> {
 
     const pickingColor = this.regl.buffer(pickingColorData);
 
-    // const pointImage = utils.drawPointImage({radius: 256, lineWidth: 30});
-
-    // const pointTexture = this.regl.texture({
-    //   data: pointImage,
-    //   min: 'mipmap',
-    // });
-
     interface Uniforms {
       transform: REGL.Vec3;
       width: number;
@@ -151,10 +144,6 @@ export default class Plot<T> {
       xyScale: number;
       minSize: number;
     }
-
-    // interface DisplayUniforms extends Uniforms {
-    //   texture: REGL.Texture2D;
-    // }
 
     interface Attributes {
       position: REGL.Buffer;
@@ -192,7 +181,7 @@ export default class Plot<T> {
 
     const primitive: REGL.PrimitiveType = 'points';
 
-    const shaders = new DefaultShaders();
+    const shaders = new _shaders.Defaults();
 
     const sharedConfig = {
       vert: shaders.vertex,

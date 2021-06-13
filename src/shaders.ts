@@ -62,10 +62,14 @@ varying vec3 vColor;
 `;
 
 
-const PICKING_FRAGMENT_CIRCLE = `
+const PICKING_FRAGMENT_HEADER = `
 precision mediump float;
 varying vec3 vPickingColor;
+`;
 
+
+const PICKING_FRAGMENT_CIRCLE = `
+${PICKING_FRAGMENT_HEADER}
 void main() {
   vec2 cxy = 2.0 * gl_PointCoord - 1.0;
   if (dot(cxy, cxy) > 1.0) discard;
@@ -75,9 +79,7 @@ void main() {
 
 
 // TODO: Parametrize constants.
-export class DefaultShaders {
-
-  pickingFragment = PICKING_FRAGMENT_CIRCLE;
+export class Defaults {
 
   private extraVarying = `
     varying float vPointSize;
@@ -140,6 +142,67 @@ export class DefaultShaders {
 
     }
     `
+  }
+
+  pickingFragment = PICKING_FRAGMENT_CIRCLE;
+
+}
+
+
+export class FastDots {
+
+  get vertex() {
+    return `
+    ${VERTEX_HEADER}
+    void main() {
+      ${VERTEX_MAIN}
+    }
+    `;
+  }
+
+  get fragment() {
+    return `
+    ${FRAGMENT_HEADER}
+    void main() {
+      vec2 cxy = 2.0 * gl_PointCoord - 1.0;
+      if (dot(cxy, cxy) > 1.0) discard;
+      gl_FragColor = vec4(vColor, 1);
+    }
+    `;
+  }
+
+  pickingFragment = PICKING_FRAGMENT_CIRCLE;
+
+}
+
+
+export class FastSquares {
+
+  get vertex() {
+    return `
+    ${VERTEX_HEADER}
+    void main() {
+      ${VERTEX_MAIN}
+    }
+    `;
+  }
+
+  get fragment() {
+    return `
+    ${FRAGMENT_HEADER}
+    void main() {
+      gl_FragColor = vec4(vColor, 1);
+    }
+    `;
+  }
+
+  get pickingFragment() {
+    return `
+    ${PICKING_FRAGMENT_HEADER}
+    void main() {
+      gl_FragColor = vec4(vPickingColor, 1);
+    }
+    `;
   }
 
 }
