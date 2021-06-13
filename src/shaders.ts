@@ -268,6 +268,7 @@ export class Shaders extends BaseShaders {
     else {
 
       float delta = fwidth(r);
+      if (r > 1.0 + delta) discard;
 
       float alpha = 1.0 - smoothstep(1.0 - delta, 1.0 + delta, r);
 
