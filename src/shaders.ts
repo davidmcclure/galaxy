@@ -108,7 +108,7 @@ export class Default implements ShaderStrategy {
   private borderColor: [number, number, number];
   private borderRatio: number;
 
-  // TODO: Less boilerplate-y way?
+  // TODO: Avoid defining these in 3x places?
   // https://github.com/microsoft/TypeScript/issues/26792
   constructor(opts: Partial<DefaultShaderOpts> = {}) {
     this.alpha = opts.alpha || 1;
