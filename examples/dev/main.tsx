@@ -1,6 +1,6 @@
 
 
-import React, { createRef, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { range } from 'lodash';
 import { randomUniform } from 'd3';
