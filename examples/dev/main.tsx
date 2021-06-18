@@ -39,7 +39,7 @@ function Page() {
       getPosition: p => [p.x, p.y],
       getSize: () => 1,
       getMaxSize: () => Infinity,
-      getColor: () => [1, 0, 0],
+      getColor: () => [0, 1, 0],
     });
 
     const bounds = new Bounds({

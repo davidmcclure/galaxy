@@ -1,5 +1,6 @@
 
 NOW
+- next for examples
 - DRY toFixed(2)
 - clean up shader import / init in Plot
 - DefaultShaderOpts
