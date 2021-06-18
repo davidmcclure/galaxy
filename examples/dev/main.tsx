@@ -40,6 +40,9 @@ function Page() {
       getSize: () => 1,
       getMaxSize: () => Infinity,
       getColor: () => [0, 1, 0],
+      shaderOpts: {
+        bigAlpha: 0.5
+      }
     });
 
     const bounds = new Bounds({

@@ -13,6 +13,11 @@ import * as _shaders from './shaders';
 import Bounds from './bounds';
 import OverlayCanvas from './overlayCanvas';
 
+import {
+  DefaultShaderOpts,
+  Default as DefaultShaderStrategy
+} from './shaders';
+
 
 const FLOAT_1D_SIZE = 4 * 1;
 const FLOAT_2D_SIZE = 4 * 2;
@@ -29,6 +34,7 @@ interface PlotOptions<T> {
   xyScale?: number;
   moveStartPixels?: number;
   bgSlots?: number;
+  shaderOpts?: Partial<DefaultShaderOpts>;
 }
 
 
@@ -181,7 +187,7 @@ export default class Plot<T> {
 
     const primitive: REGL.PrimitiveType = 'points';
 
-    const shaders = new _shaders.Default();
+    const shaders = new DefaultShaderStrategy(opts.shaderOpts || {});
 
     const sharedConfig = {
       vert: shaders.vertex,

@@ -1,6 +1,6 @@
 
 NOW
-- next for examples
+- next for examples?
 - DRY toFixed(2)
 - clean up shader import / init in Plot
 - DefaultShaderOpts
@@ -12,6 +12,7 @@ event emitter - replace rxjs?
 pixel ratio option
 default params
 just import necessary d3 code
+auto create <canvas>?
 fade in BG points
 tests
 perf benchamrks

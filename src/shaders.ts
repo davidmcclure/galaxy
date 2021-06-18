@@ -85,18 +85,38 @@ interface ShaderStrategy {
 }
 
 
+export interface DefaultShaderOpts {
+  alpha: number;
+  fastAlpha: number;
+  bigAlpha: number;
+  maxFastSize: number;
+  bigEdge1: number;
+  bigEdge2: number;
+  borderColor: [number, number, number];
+  borderRatio: number;
+}
+
+
+export interface Default extends DefaultShaderOpts {}
+
+
 export class Default implements ShaderStrategy {
 
-  constructor(
-    private alpha = 1,
-    private fastAlpha = 1,
-    private bigAlpha = 0.7,
-    private maxFastSize = 20,
-    private bigEdge1 = 20,
-    private bigEdge2 = 100,
-    private borderColor = [0, 0, 0],
-    private borderRatio = 0.05,
-  ) {}
+  constructor(opts: Partial<DefaultShaderOpts>) {
+    Object.assign(this, {
+      ...{
+        alpha: 1,
+        fastAlpha: 1,
+        bigAlpha: 0.7,
+        maxFastSize: 20,
+        bigEdge1: 20,
+        bigEdge2: 100,
+        borderColor: [0, 0, 0],
+        borderRatio: 0.05,
+      },
+      ...opts
+    });
+  }
 
   private extraVarying = `
     varying float vPointSize;
