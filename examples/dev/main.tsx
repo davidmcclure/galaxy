@@ -41,7 +41,7 @@ function Page() {
       getMaxSize: () => Infinity,
       getColor: () => [0, 1, 0],
       shaderOpts: {
-        bigAlpha: 0.5
+        bigAlpha: 0.7,
       }
     });
 

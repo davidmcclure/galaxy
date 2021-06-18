@@ -9,7 +9,6 @@ import { Subject, fromEvent, Subscription } from 'rxjs';
 import * as d3 from 'd3';
 
 import * as utils from './utils';
-import * as _shaders from './shaders';
 import Bounds from './bounds';
 import OverlayCanvas from './overlayCanvas';
 
@@ -142,6 +141,8 @@ export default class Plot<T> {
 
     const pickingColor = this.regl.buffer(pickingColorData);
 
+    const shaders = new DefaultShaderStrategy(opts.shaderOpts);
+
     interface Uniforms {
       transform: REGL.Vec3;
       width: number;
@@ -186,8 +187,6 @@ export default class Plot<T> {
     };
 
     const primitive: REGL.PrimitiveType = 'points';
-
-    const shaders = new DefaultShaderStrategy(opts.shaderOpts || {});
 
     const sharedConfig = {
       vert: shaders.vertex,

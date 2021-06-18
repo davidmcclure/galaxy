@@ -97,25 +97,28 @@ export interface DefaultShaderOpts {
 }
 
 
-export interface Default extends DefaultShaderOpts {}
-
-
 export class Default implements ShaderStrategy {
 
-  constructor(opts: Partial<DefaultShaderOpts>) {
-    Object.assign(this, {
-      ...{
-        alpha: 1,
-        fastAlpha: 1,
-        bigAlpha: 0.7,
-        maxFastSize: 20,
-        bigEdge1: 20,
-        bigEdge2: 100,
-        borderColor: [0, 0, 0],
-        borderRatio: 0.05,
-      },
-      ...opts
-    });
+  private alpha: number;
+  private fastAlpha: number;
+  private bigAlpha: number;
+  private maxFastSize: number;
+  private bigEdge1: number;
+  private bigEdge2: number;
+  private borderColor: [number, number, number];
+  private borderRatio: number;
+
+  // TODO: Less boilerplate-y way?
+  // https://github.com/microsoft/TypeScript/issues/26792
+  constructor(opts: Partial<DefaultShaderOpts> = {}) {
+    this.alpha = opts.alpha || 1;
+    this.fastAlpha = opts.fastAlpha || 1;
+    this.bigAlpha = opts.bigAlpha || 0.7;
+    this.maxFastSize = opts.maxFastSize || 20;
+    this.bigEdge1 = opts.bigEdge1 || 20;
+    this.bigEdge2 = opts.bigEdge2 || 100;
+    this.borderColor = opts.borderColor || [0, 0, 0];
+    this.borderRatio = opts.borderRatio || 0.05;
   }
 
   private extraVarying = `
