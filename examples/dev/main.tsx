@@ -39,7 +39,7 @@ function Page() {
       getPosition: p => [p.x, p.y],
       getSize: () => 1,
       getMaxSize: () => Infinity,
-      getColor: () => [0, 1, 0],
+      getColor: () => [Math.random(), Math.random(), Math.random()],
       shaderOpts: {
         bigAlpha: 0.7,
       }
