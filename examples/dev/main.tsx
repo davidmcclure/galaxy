@@ -8,6 +8,7 @@ import { useControls } from 'leva';
 
 import Plot, { Bounds } from '../../src';
 import { FastSquares } from '../../src/shaders';
+
 import './index.css';
 
 

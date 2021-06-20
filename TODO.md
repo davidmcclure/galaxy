@@ -3,7 +3,6 @@ NOW
 - next for examples?
 
 event emitter - replace rxjs?
-pixel ratio option
 just import necessary d3 code
 auto create <canvas>?
 fade in BG points
