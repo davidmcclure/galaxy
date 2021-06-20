@@ -78,7 +78,7 @@ void main() {
 `;
 
 
-interface ShaderStrategy {
+export interface ShaderStrategy {
   vertex: string;
   fragment: string;
   pickingFragment: string;

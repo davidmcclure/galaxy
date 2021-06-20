@@ -7,6 +7,7 @@ import { randomUniform } from 'd3';
 import { useControls } from 'leva';
 
 import Plot, { Bounds } from '../../src';
+import { FastSquares } from '../../src/shaders';
 import './index.css';
 
 
@@ -42,7 +43,8 @@ function Page() {
       getColor: () => [Math.random(), Math.random(), Math.random()],
       shaderOpts: {
         bigAlpha: 0.8,
-      }
+      },
+      // shaderStrategy: new FastSquares(),
     });
 
     const bounds = new Bounds({
