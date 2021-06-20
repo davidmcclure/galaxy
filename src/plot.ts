@@ -33,6 +33,7 @@ interface PlotOptions<T> {
   getColor: (p: T) => [number, number, number],
   xyScale?: number;
   moveStartPixels?: number;
+  pixelRatio?: number;
   bgSlots?: number;
   shaderOpts?: Partial<DefaultShaderOpts>;
   shaderStrategy?: ShaderStrategy;
@@ -45,6 +46,7 @@ export default class Plot<T> {
   bgPoints: T[] = [];
   canvas: OverlayCanvas;
   xyScale: number;
+  pixelRatio: number;
   transform: d3.ZoomTransform;
   isMoving = false;
   getPosition: (p: T) => [number, number];
@@ -88,16 +90,18 @@ export default class Plot<T> {
   constructor(opts: PlotOptions<T>) {
 
     this.points = opts.points;
-    this.canvas = new OverlayCanvas(opts.canvas);
 
     this.xyScale = opts.xyScale || 1;
     this.moveStartPixels = opts.moveStartPixels || 2;
+    this.pixelRatio = opts.pixelRatio || window.devicePixelRatio;
 
     // TODO: Fall back to defaults for everything except getPosition.
     this.getPosition = opts.getPosition;
     this.getSize = opts.getSize;
     this.getMaxSize = opts.getMaxSize;
     this.getColor = opts.getColor;
+
+    this.canvas = new OverlayCanvas(opts.canvas, this.pixelRatio);
 
     this.regl = REGL({
       canvas: this.canvas.el,
@@ -188,7 +192,7 @@ export default class Plot<T> {
       },
       width: this.regl.context('viewportWidth'),
       height: this.regl.context('viewportHeight'),
-      pixelRatio: this.regl.context('pixelRatio'),
+      pixelRatio: this.pixelRatio,
       xyScale: this.xyScale,
     };
 
@@ -366,7 +370,7 @@ export default class Plot<T> {
   // Data coords -> canvas coords, scaled by pixel ratio.
   dataToCanvas(x: number, y: number): [number, number] {
     const xy = this.dataToScreen(x, y);
-    return utils.scaleVec2(xy, window.devicePixelRatio);
+    return utils.scaleVec2(xy, this.pixelRatio);
   }
 
   // TODO: Include gutter?
@@ -414,7 +418,7 @@ export default class Plot<T> {
     const offset = Math.sqrt(Math.pow(sx-cx, 2) + Math.pow(sy-cy, 2));
 
     // Has the center moved >N screen pixels from the start?
-    return offset > this.moveStartPixels * window.devicePixelRatio;
+    return offset > this.moveStartPixels * this.pixelRatio;
 
   }
 
@@ -497,8 +501,8 @@ export default class Plot<T> {
 
     // TODO: Compare directly to the actual framebuffer size?
     // Prevent out-of-range errors at screen edges.
-    const fbx = clamp(x * window.devicePixelRatio, 0, this.canvas.width - 1);
-    const fby = clamp(y * window.devicePixelRatio, 0, this.canvas.height - 1);
+    const fbx = clamp(x * this.pixelRatio, 0, this.canvas.width - 1);
+    const fby = clamp(y * this.pixelRatio, 0, this.canvas.height - 1);
 
     // TODO: Render this at pixel ratio 1, for speed?
     const [r, g, b] = this.regl.read({

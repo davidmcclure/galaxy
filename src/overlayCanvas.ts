@@ -15,7 +15,8 @@ export default class OverlayCanvas {
     resize: new Subject<void>(),
   };
 
-  constructor(public el: HTMLCanvasElement) {
+  // TOOD: Opts object for pixel ratio?
+  constructor(public el: HTMLCanvasElement, private pixelRatio: number) {
 
     // TODO: Will the parent always be the container?
     this.container = el.parentElement!;
@@ -25,7 +26,7 @@ export default class OverlayCanvas {
     // TODO: Resize listener directly on the container?
     // Sync after window resize.
     this.resizeSub = fromEvent(window, 'resize')
-      .subscribe(this.onResize.bind(this));
+      .subscribe(this.onResizeDebounced);
 
   }
 
@@ -36,8 +37,8 @@ export default class OverlayCanvas {
 
   private onResize() {
 
-    const htmlWidth = this.container.offsetWidth * window.devicePixelRatio;
-    const htmlHeight = this.container.offsetHeight * window.devicePixelRatio;
+    const htmlWidth = this.container.offsetWidth * this.pixelRatio;
+    const htmlHeight = this.container.offsetHeight * this.pixelRatio;
 
     const cssWidth = `${this.container.offsetWidth}px`;
     const cssHeight = `${this.container.offsetHeight}px`;
