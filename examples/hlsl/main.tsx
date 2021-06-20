@@ -23,6 +23,7 @@ function Page() {
 
   const plotCanvasRef = useRef<HTMLCanvasElement>(null);
   const hlPointCanvasRef = useRef<HTMLCanvasElement>(null);
+  const slPointCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const settings = useControls({
     numPoints: 1000000,
@@ -55,24 +56,44 @@ function Page() {
 
     plot.moveToBounds(bounds.pad(500));
 
-    const point = new OverlayPoint(
+    const hlPoint = new OverlayPoint(
       plot,
       hlPointCanvasRef.current!,
+      drawPointImage({
+        fillStyle: 'yellow'
+      }),
+    );
+
+    plot.events.highlight.subscribe(p => {
+      hlPoint.setPoint(p);
+      document.body.style.cursor = 'pointer';
+    });
+
+    plot.events.unHighlight.subscribe(() => {
+      hlPoint.setPoint(null);
+      document.body.style.cursor = 'default';
+    });
+
+    const slPoint = new OverlayPoint(
+      plot,
+      slPointCanvasRef.current!,
       drawPointImage({
         fillStyle: 'red'
       }),
     );
 
-    plot.events.highlight.subscribe(p => {
-      point.setPoint(p);
+    plot.events.select.subscribe(p => {
+      slPoint.setPoint(p);
     });
 
-    plot.events.unHighlight.subscribe(() => {
-      point.setPoint(null);
+    plot.events.unSelect.subscribe(() => {
+      slPoint.setPoint(null);
     });
 
     return () => {
       plot.destroy();
+      hlPoint.destroy();
+      slPoint.destroy();
     }
 
   });
@@ -81,6 +102,7 @@ function Page() {
     <div className="w-screen h-screen">
       <canvas ref={plotCanvasRef}></canvas>
       <canvas ref={hlPointCanvasRef}></canvas>
+      <canvas ref={slPointCanvasRef}></canvas>
     </div>
   )
 
