@@ -38,7 +38,7 @@ function Page() {
       points,
       getPosition: p => [p.x, p.y],
       getSize: () => 1,
-      getMaxSize: () => Infinity,
+      getMaxSize: () => 200,
       getColor: () => [Math.random(), Math.random(), Math.random()],
       shaderOpts: {
         bigAlpha: 0.7,

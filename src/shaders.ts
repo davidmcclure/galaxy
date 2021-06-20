@@ -99,26 +99,24 @@ export interface DefaultShaderOpts {
 
 export class Default implements ShaderStrategy {
 
-  private alpha: number;
-  private fastAlpha: number;
-  private bigAlpha: number;
-  private maxFastSize: number;
-  private bigEdge1: number;
-  private bigEdge2: number;
-  private borderColor: [number, number, number];
-  private borderRatio: number;
+  private opts: DefaultShaderOpts;
 
-  // TODO: Avoid defining these in 3x places?
-  // https://github.com/microsoft/TypeScript/issues/26792
+  // TODO: How to handle "options" constructors?
   constructor(opts: Partial<DefaultShaderOpts> = {}) {
-    this.alpha = opts.alpha || 1;
-    this.fastAlpha = opts.fastAlpha || 1;
-    this.bigAlpha = opts.bigAlpha || 0.7;
-    this.maxFastSize = opts.maxFastSize || 20;
-    this.bigEdge1 = opts.bigEdge1 || 20;
-    this.bigEdge2 = opts.bigEdge2 || 100;
-    this.borderColor = opts.borderColor || [0, 0, 0];
-    this.borderRatio = opts.borderRatio || 0.05;
+
+    const defaults: DefaultShaderOpts = {
+      alpha: 1,
+      fastAlpha: 1,
+      bigAlpha: 0.8,
+      maxFastSize: 20,
+      bigEdge1: 20,
+      bigEdge2: 100,
+      borderColor: [0, 0, 0],
+      borderRatio: 0.05,
+    };
+
+    this.opts = {...defaults, ...opts};
+
   }
 
   private extraVarying = `
@@ -128,6 +126,17 @@ export class Default implements ShaderStrategy {
   `;
 
   get vertex() {
+
+    const bigEdge1 = this.opts.bigEdge1.toFixed(2);
+    const bigEdge2 = this.opts.bigEdge2.toFixed(2);
+
+    const alpha = this.opts.alpha.toFixed(2);
+    const oneMinusBigAlpha = (1 - this.opts.bigAlpha).toFixed(2);
+
+    const borderColor = `vec3(${
+      this.opts.borderColor.map(c => c.toFixed(2)).join(', ')
+    })`;
+
     return `
     ${VERTEX_HEADER}
     ${this.extraVarying}
@@ -136,32 +145,25 @@ export class Default implements ShaderStrategy {
 
       ${VERTEX_MAIN}
 
-      float bigness = smoothstep(
-        ${this.bigEdge1.toFixed(2)},
-        ${this.bigEdge2.toFixed(2)},
-        gl_PointSize
-      );
-
-      float alpha = (
-        ${this.alpha.toFixed(2)} -
-        (bigness * ${(1 - this.bigAlpha).toFixed(2)})
-      );
-
-      vec3 borderColor = mix(
-        color,
-        vec3(${this.borderColor.map(c => c.toFixed(2)).join(', ')}),
-        bigness
-      );
+      float bigness = smoothstep(${bigEdge1}, ${bigEdge2}, gl_PointSize);
+      float alpha = ${alpha} - (bigness * ${oneMinusBigAlpha});
+      vec3 borderColor = mix(color, ${borderColor}, bigness);
 
       vPointSize = gl_PointSize;
       vAlpha = alpha;
       vBorderColor = borderColor;
 
     }
-    `
+    `;
+
   }
 
   get fragment() {
+
+    const maxFastSize = this.opts.maxFastSize.toFixed(2);
+    const fastAlpha = this.opts.fastAlpha.toFixed(2);
+    const borderStart = (1 - this.opts.borderRatio).toFixed(2);
+
     return `
     ${FRAGMENT_HEADER}
     ${this.extraVarying}
@@ -171,9 +173,9 @@ export class Default implements ShaderStrategy {
       vec2 cxy = 2.0 * gl_PointCoord - 1.0;
       float r = dot(cxy, cxy);
 
-      if (vPointSize < ${this.maxFastSize.toFixed(2)}) {
+      if (vPointSize < ${maxFastSize}) {
         if (r > 1.0) discard;
-        gl_FragColor = vec4(vColor, ${this.fastAlpha.toFixed(2)});
+        gl_FragColor = vec4(vColor, ${fastAlpha});
       }
 
       else {
@@ -186,11 +188,7 @@ export class Default implements ShaderStrategy {
         vec3 color = mix(
           vColor,
           vBorderColor,
-          smoothstep(
-            ${(1 - this.borderRatio).toFixed(2)} - delta,
-            ${(1 - this.borderRatio).toFixed(2)} + delta,
-            r
-          )
+          smoothstep(${borderStart} - delta, ${borderStart} + delta, r)
         );
 
         gl_FragColor = vec4(color, vAlpha * alpha);
@@ -198,7 +196,8 @@ export class Default implements ShaderStrategy {
       }
 
     }
-    `
+    `;
+
   }
 
   pickingFragment = PICKING_FRAGMENT_CIRCLE;
