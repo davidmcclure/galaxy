@@ -10,6 +10,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         dev: './examples/dev/index.html',
+        hlsl: './examples/hlsl/index.html',
       }
     }
   }

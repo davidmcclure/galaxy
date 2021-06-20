@@ -24,7 +24,7 @@ export function drawPointImage(opts: Partial<{
   fillStyle: string,
   strokeStyle: string,
   lineDash: number[],
-}>) {
+}> = {}) {
 
   // TODO: Do this ^ in signature?
   const {
