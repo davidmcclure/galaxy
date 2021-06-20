@@ -1,16 +1,9 @@
 
 NOW
 - next for examples?
-- DRY toFixed(2)
-- clean up shader import / init in Plot
-- DefaultShaderOpts
-- pass opts or strategy to Plot
 
-AA points; pluggable shader abstraction / settings
-parametrize base alpha?
 event emitter - replace rxjs?
 pixel ratio option
-default params
 just import necessary d3 code
 auto create <canvas>?
 fade in BG points
@@ -25,4 +18,5 @@ plugins
 - minimap
 
 reach
+- image points
 - transitions
