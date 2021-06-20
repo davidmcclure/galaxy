@@ -41,7 +41,7 @@ function Page() {
       getMaxSize: () => 200,
       getColor: () => [Math.random(), Math.random(), Math.random()],
       shaderOpts: {
-        bigAlpha: 0.7,
+        bigAlpha: 0.8,
       }
     });
 

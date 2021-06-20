@@ -99,24 +99,20 @@ export interface DefaultShaderOpts {
 
 export class Default implements ShaderStrategy {
 
-  private opts: DefaultShaderOpts;
+  private opts: DefaultShaderOpts = {
+    alpha: 1,
+    fastAlpha: 1,
+    bigAlpha: 0.8,
+    maxFastSize: 20,
+    bigEdge1: 20,
+    bigEdge2: 100,
+    borderColor: [0, 0, 0],
+    borderRatio: 0.05,
+  };
 
   // TODO: How to handle "options" constructors?
   constructor(opts: Partial<DefaultShaderOpts> = {}) {
-
-    const defaults: DefaultShaderOpts = {
-      alpha: 1,
-      fastAlpha: 1,
-      bigAlpha: 0.8,
-      maxFastSize: 20,
-      bigEdge1: 20,
-      bigEdge2: 100,
-      borderColor: [0, 0, 0],
-      borderRatio: 0.05,
-    };
-
-    this.opts = {...defaults, ...opts};
-
+    this.opts = {...this.opts, ...opts};
   }
 
   private extraVarying = `
