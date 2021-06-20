@@ -10,12 +10,8 @@ import * as d3 from 'd3';
 
 import * as utils from './utils';
 import Bounds from './bounds';
+import { DefaultShaderOpts, DefaultCircles } from './shaders';
 import OverlayCanvas from './overlayCanvas';
-
-import {
-  DefaultShaderOpts,
-  Default as DefaultShaderStrategy
-} from './shaders';
 
 
 const FLOAT_1D_SIZE = 4 * 1;
@@ -141,7 +137,7 @@ export default class Plot<T> {
 
     const pickingColor = this.regl.buffer(pickingColorData);
 
-    const shaders = new DefaultShaderStrategy(opts.shaderOpts);
+    const shaders = new DefaultCircles(opts.shaderOpts);
 
     interface Uniforms {
       transform: REGL.Vec3;

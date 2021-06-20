@@ -97,7 +97,7 @@ export interface DefaultShaderOpts {
 }
 
 
-export class Default implements ShaderStrategy {
+export class DefaultCircles implements ShaderStrategy {
 
   private opts: DefaultShaderOpts = {
     alpha: 1,
@@ -201,7 +201,7 @@ export class Default implements ShaderStrategy {
 }
 
 
-export class FastDots implements ShaderStrategy {
+export class FastCircles implements ShaderStrategy {
 
   get vertex() {
     return `
