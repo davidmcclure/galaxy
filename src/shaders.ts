@@ -171,7 +171,8 @@ export class DefaultCircles implements ShaderStrategy {
 
       if (vPointSize < ${maxFastSize}) {
         if (r > 1.0) discard;
-        gl_FragColor = vec4(vColor, ${fastAlpha});
+        float alpha = ${fastAlpha} * min(1.0, vPointSize);
+        gl_FragColor = vec4(vColor, alpha);
       }
 
       else {
