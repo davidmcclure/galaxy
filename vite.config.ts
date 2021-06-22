@@ -11,6 +11,7 @@ export default defineConfig({
       input: {
         dev: './examples/dev/index.html',
         hlsl: './examples/hlsl/index.html',
+        arxiv: './examples/arxiv/index.html',
       }
     }
   }
