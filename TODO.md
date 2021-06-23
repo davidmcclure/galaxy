@@ -1,7 +1,8 @@
 
-NOW
-- blending??
-- default shaders - fast alpha vs alpha weirdness
+shaders
+  sub-pixel alpha
+  blending
+  "flashing" during zoom
 
 next for examples?
 event emitter - replace rxjs?
