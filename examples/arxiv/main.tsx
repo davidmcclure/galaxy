@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { color as d3Color, interpolatePlasma, interpolateMagma } from 'd3';
+import { color as d3Color, interpolatePlasma, interpolateMagma, interpolateViridis } from 'd3';
 
 import Plot from '../../src/plot';
 import { hexToRgb } from '../../src/utils';
@@ -32,9 +32,9 @@ function PlotWrapper(props: { points: Point[] }) {
       points: props.points,
       getPosition: p => p.position,
       getSize: () => 2,
-      getMaxSize: () => 100,
+      getMaxSize: () => 60,
       getColor: p => {
-        const color = interpolateMagma(p.date_rank_dense);
+        const color = interpolateViridis(p.date_rank_dense);
         return hexToRgb(parseInt(color.slice(1), 16));
       },
       xyScale: 200,
