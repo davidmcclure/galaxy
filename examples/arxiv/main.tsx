@@ -2,8 +2,10 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { color as d3Color, interpolatePlasma, interpolateMagma } from 'd3';
 
 import Plot from '../../src/plot';
+import { hexToRgb } from '../../src/utils';
 
 import './index.css';
 
@@ -14,6 +16,8 @@ interface Point {
   categories: string;
   update_date: string;
   position: [number, number];
+  date_rank: number;
+  date_rank_dense: number;
 }
 
 
@@ -27,12 +31,15 @@ function PlotWrapper(props: { points: Point[] }) {
       canvas: canvasRef.current!,
       points: props.points,
       getPosition: p => p.position,
-      getSize: () => 1,
+      getSize: () => 2,
       getMaxSize: () => 100,
-      getColor: () => [72/255, 120/255, 208/255],
+      getColor: p => {
+        const color = interpolateMagma(p.date_rank_dense);
+        return hexToRgb(parseInt(color.slice(1), 16));
+      },
       xyScale: 200,
       shaderOpts: {
-        bigAlpha: 0.95,
+        bigAlpha: 0.8,
         bigEdge1: 10,
         bigEdge2: 30,
         maxFastSize: 10,
@@ -61,7 +68,7 @@ function Page() {
   useEffect(() => {
     (async () => {
 
-      const points: Point[] = await fetch('/arxiv/arxiv.json.gz')
+      const points: Point[] = await fetch('/arxiv/arxiv-ts.json.gz')
         .then(res => res.json());
 
       setPoints(points);
