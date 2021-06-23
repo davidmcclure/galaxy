@@ -1,8 +1,7 @@
 
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import create from 'zustand';
 
 import Plot from '../../src/plot';
 
@@ -16,18 +15,6 @@ interface Point {
   update_date: string;
   position: [number, number];
 }
-
-
-interface StoreState {
-  points: null | Point[];
-  setPoints: (points: Point[]) => void;
-}
-
-
-const useStore = create<StoreState>(set => ({
-  points: null,
-  setPoints: (points: Point[]) => set({points}),
-}));
 
 
 function PlotWrapper(props: { points: Point[] }) {
@@ -69,8 +56,7 @@ function PlotWrapper(props: { points: Point[] }) {
 
 function Page() {
 
-  const points = useStore(state => state.points);
-  const setPoints = useStore(state => state.setPoints);
+  const [points, setPoints] = useState<null | Point[]>(null);
 
   useEffect(() => {
     (async () => {

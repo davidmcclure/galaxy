@@ -1,7 +1,9 @@
 
 NOW
-- next for examples?
+- blending??
+- default shaders - fast alpha vs alpha weirdness
 
+next for examples?
 event emitter - replace rxjs?
 just import necessary d3 code
 auto create <canvas>?
