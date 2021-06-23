@@ -21,6 +21,8 @@ export function getShaderPointSize(
 
 
 const VERTEX_HEADER = `
+precision mediump float;
+
 attribute vec2 position;
 attribute float size;
 attribute float maxSize;
@@ -58,6 +60,7 @@ vPickingColor = pickingColor;
 const FRAGMENT_HEADER = `
 #extension GL_OES_standard_derivatives : enable
 precision mediump float;
+uniform float pixelRatio;
 varying vec3 vColor;
 `;
 
@@ -139,7 +142,12 @@ export class DefaultCircles implements ShaderStrategy {
 
       ${VERTEX_MAIN}
 
-      float bigness = smoothstep(${bigEdge1}, ${bigEdge2}, gl_PointSize);
+      float bigness = smoothstep(
+        ${bigEdge1} * pixelRatio,
+        ${bigEdge2} * pixelRatio,
+        gl_PointSize
+      );
+
       float alpha = ${alpha} - (bigness * ${oneMinusBigAlpha});
       vec3 borderColor = mix(color, ${borderColor}, bigness);
 
@@ -166,7 +174,7 @@ export class DefaultCircles implements ShaderStrategy {
       vec2 cxy = 2.0 * gl_PointCoord - 1.0;
       float r = dot(cxy, cxy);
 
-      if (vPointSize < ${maxFastSize}) {
+      if (vPointSize < ${maxFastSize} * pixelRatio) {
         if (r > 1.0) discard;
         float alpha = vAlpha * min(1.0, vPointSize);
         gl_FragColor = vec4(vColor, alpha);

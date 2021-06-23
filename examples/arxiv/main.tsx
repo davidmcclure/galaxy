@@ -2,7 +2,13 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { color as d3Color, interpolatePlasma, interpolateMagma, interpolateViridis } from 'd3';
+
+import {
+  interpolatePlasma,
+  interpolateMagma,
+  interpolateViridis,
+  interpolateInferno,
+} from 'd3';
 
 import Plot from '../../src/plot';
 import { hexToRgb } from '../../src/utils';
@@ -38,13 +44,17 @@ function PlotWrapper(props: { points: Point[] }) {
         return hexToRgb(parseInt(color.slice(1), 16));
       },
       xyScale: 200,
+      // pixelRatio: 1,
       shaderOpts: {
         bigAlpha: 0.8,
-        bigEdge1: 10,
-        bigEdge2: 30,
-        maxFastSize: 10,
+        bigEdge1: 20,
+        bigEdge2: 60,
+        maxFastSize: 20,
+        borderRatio: 0.1,
       }
     });
+
+    canvasRef.current!.addEventListener('mousemove', console.log);
 
     return () => {
       plot.destroy();

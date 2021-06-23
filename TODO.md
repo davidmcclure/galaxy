@@ -3,6 +3,7 @@ shaders
   sub-pixel alpha
   blending
   "flashing" during zoom
+  edge clipping on border AA?
 
 next for examples?
 event emitter - replace rxjs?
