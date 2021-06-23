@@ -87,7 +87,6 @@ export interface ShaderStrategy {
 
 export interface DefaultShaderOpts {
   alpha: number;
-  fastAlpha: number;
   bigAlpha: number;
   maxFastSize: number;
   bigEdge1: number;
@@ -101,7 +100,6 @@ export class DefaultCircles implements ShaderStrategy {
 
   private opts: DefaultShaderOpts = {
     alpha: 1,
-    fastAlpha: 1,
     bigAlpha: 0.8,
     maxFastSize: 20,
     bigEdge1: 20,
@@ -157,7 +155,6 @@ export class DefaultCircles implements ShaderStrategy {
   get fragment() {
 
     const maxFastSize = this.opts.maxFastSize.toFixed(2);
-    const fastAlpha = this.opts.fastAlpha.toFixed(2);
     const borderStart = (1 - this.opts.borderRatio).toFixed(2);
 
     return `
@@ -171,7 +168,7 @@ export class DefaultCircles implements ShaderStrategy {
 
       if (vPointSize < ${maxFastSize}) {
         if (r > 1.0) discard;
-        float alpha = ${fastAlpha} * min(1.0, vPointSize);
+        float alpha = vAlpha * min(1.0, vPointSize);
         gl_FragColor = vec4(vColor, alpha);
       }
 

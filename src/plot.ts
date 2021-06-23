@@ -221,6 +221,7 @@ export default class Plot<T> {
         minSize: 0,
       },
 
+      // TODO: Is this best?
       blend: {
         enable: true,
         func: {
