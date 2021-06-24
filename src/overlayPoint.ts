@@ -7,7 +7,7 @@ import OverlayCanvas from './overlayCanvas';
 import { getShaderPointSize } from './shaders';
 
 
-// TODO: pointImage
+// TODO: pointImage / options for default image.
 interface OverlayPointOptions {
   minSize: number;
   sizeRatio: number;
