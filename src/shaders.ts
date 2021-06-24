@@ -1,6 +1,10 @@
 
 
-// TODO: Load .vert / .frag templates?
+/*
+TODO
+load from template files?
+parametrize decimal precision on templated variables
+*/
 
 
 // NOTE: Has to be kept exactly in sync with the shader logic, so that point
