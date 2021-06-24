@@ -20,6 +20,7 @@ export function getShaderPointSize(
 }
 
 
+// TODO: Any other pixelRatio multiplies missing?
 const VERTEX_HEADER = `
 precision mediump float;
 
