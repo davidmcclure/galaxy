@@ -43,7 +43,7 @@ varying vec3 vPickingColor;
 
 const VERTEX_MAIN = `
 vec2 xy = ((position * xyScale * transform.z) +
-  vec2(transform.x, -transform.y)) * pixelRatio * vec2(1, -1);
+  vec2(transform.x, -transform.y)) * vec2(1, -1) * pixelRatio;
 
 float ndcX = 2.0 * ((xy.x / width) - 0.5);
 float ndcY = -(2.0 * ((xy.y / height) - 0.5));
@@ -185,13 +185,13 @@ export class DefaultCircles implements ShaderStrategy {
         float delta = fwidth(r);
         if (r > 1.0 + delta) discard;
 
-        float alpha = 1.0 - smoothstep(1.0 - delta, 1.0 + delta, r);
-
         vec3 color = mix(
           vColor,
           vBorderColor,
           smoothstep(${borderStart} - delta, ${borderStart} + delta, r)
         );
+
+        float alpha = 1.0 - smoothstep(1.0 - delta, 1.0 + delta, r);
 
         gl_FragColor = vec4(color, vAlpha * alpha);
 
