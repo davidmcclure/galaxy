@@ -1,5 +1,8 @@
 
 
+// TODO: Load .vert / .frag templates?
+
+
 // NOTE: Has to be kept exactly in sync with the shader logic, so that point
 // sizes can be calculated in JS.
 export function getShaderPointSize(

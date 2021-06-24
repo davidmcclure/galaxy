@@ -107,7 +107,7 @@ function PlotWrapper(props: { points: Point[] }) {
       canvas: plotCanvasRef.current!,
       points: props.points,
       getPosition: p => p.position,
-      getSize: () => 2,
+      getSize: () => 1.5,
       getMaxSize: () => 60,
       getColor: p => {
         const color = interpolateViridis(p.date_rank_dense);
@@ -117,10 +117,10 @@ function PlotWrapper(props: { points: Point[] }) {
       xyScale: 200,
       // pixelRatio: 1,
       shaderOpts: {
-        bigAlpha: 0.8,
+        maxFastSize: 5,
         bigEdge1: 20,
         bigEdge2: 60,
-        maxFastSize: 20,
+        bigAlpha: 0.8,
         borderRatio: 0.1,
       }
     });
